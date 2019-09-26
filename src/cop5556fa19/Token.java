@@ -1,20 +1,19 @@
-/* *
+/**
  * Developed  for the class project in COP5556 Programming Language Principles 
  * at the University of Florida, Fall 2019.
  * 
  * This software is solely for the educational benefit of students 
  * enrolled in the course during the Fall 2019 semester.  
  * 
- * This software, and any software derived from it,  may not be shared with others or posted to public web sites,
+ * This software, and any software derived from it,  may not be shared with others or posted to public web sites or repositories,
  * either during the course or afterwards.
  * 
  *  @Beverly A. Sanders, 2019
  */
 
-//Modified 9/14 to override equals and hashcode.  Line and pos are not included in equality checks.  
-
-
 package cop5556fa19;
+
+import cop5556fa19.Token.Kind;
 
 public class Token {
 	public enum Kind {
@@ -42,41 +41,41 @@ public class Token {
 		KW_true,
 		KW_until,
 		KW_while,
-		OP_PLUS,
-		OP_MINUS,
-		OP_TIMES,
-		OP_DIV,
-		OP_MOD,
-		OP_POW,
-		OP_HASH,
-		BIT_AMP,
-		BIT_XOR,
-		BIT_OR,
-		BIT_SHIFTL,
-		BIT_SHIFTR,
-		OP_DIVDIV,
-		REL_EQEQ,
-		REL_NOTEQ,
-		REL_LE,
-		REL_GE,
-		REL_LT,
-		REL_GT,
-		ASSIGN,
-		LPAREN,
+		OP_PLUS, // +
+		OP_MINUS, // -
+		OP_TIMES, // *
+		OP_DIV, // /
+		OP_MOD, // %
+		OP_POW, // ^
+		OP_HASH, // #
+		BIT_AMP, // &
+		BIT_XOR, // ~
+		BIT_OR,  //  |
+		BIT_SHIFTL, // <<
+		BIT_SHIFTR, //  >>
+		OP_DIVDIV, // //
+		REL_EQEQ,  // ==
+		REL_NOTEQ, // ~=
+		REL_LE, // <=
+		REL_GE, // >=
+		REL_LT, // <
+		REL_GT, // >
+		ASSIGN, // =
+		LPAREN, 
 		RPAREN,
 		LCURLY,
 		RCURLY,
 		LSQUARE,
 		RSQUARE,
-		COLONCOLON,
+		COLONCOLON, // ::
 		SEMI,
 		COLON,
 		COMMA,
-		DOT,
-		DOTDOT,
-		DOTDOTDOT,
-		STRINGLIT,
-		EOF
+		DOT,   // .
+		DOTDOT,  // ..
+		DOTDOTDOT, // ...
+		STRINGLIT, 
+		EOF;
 	}
 	
 	public final Kind kind;
@@ -93,51 +92,10 @@ public class Token {
 		this.line = line;
 	}
 
-
-
-
-	
 	@Override
 	public String toString() {
 		return "Token [kind=" + kind + ", text=" + text + ", pos=" + (pos+1) + ", line=" + (line+1) + "]";
 	}
-
-
-
-
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((kind == null) ? 0 : kind.hashCode());
-		result = prime * result + line;
-		return result;
-	}
-
-
-
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Token other = (Token) obj;
-		if (kind != other.kind)
-			return false;
-		if (line != other.line)
-			return false;
-		return true;
-	}
-
-
-
-
 
 	/*precondition:  kind is NUMLIT */
 	public int getIntVal() {
@@ -145,12 +103,12 @@ public class Token {
 	}
 	
 	/*precondition:  kind is STRINGLIT */
-	String getStringVal() {
+	public String getStringVal() {
 		return text.substring(1,text.length()-1);  //remove delimiters
 	}
 	
 	/*precondition:   kind is NAME */
-	String getName() {
+	public String getName() {
 		return text;
 	}
 }
