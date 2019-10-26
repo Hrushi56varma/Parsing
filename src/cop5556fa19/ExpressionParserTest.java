@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.Reader;
 import java.io.StringReader;
+
 import org.junit.jupiter.api.Test;
 
 import cop5556fa19.AST.Exp;
@@ -88,7 +89,7 @@ class ExpressionParserTest {
 		String input = "\"string\"";
 		Exp e = parseAndShow(input);
 		assertEquals(ExpString.class, e.getClass());
-		assertEquals("string", ((ExpString) e).v);
+		assertEquals("\"string\"", ((ExpString) e).v);
 	}
 
 	@Test
@@ -131,8 +132,63 @@ class ExpressionParserTest {
 		Exp e = parseAndShow(input);
 		});	
 	}
+	@Test
+	void f0200() throws Exception{
+		String input = "f(0,200)";
+		Exp e = parseAndShow(input);
+	}
+	@Test
+	void testfunc() throws Exception {
+		String input = "function(a, b, c) end";
+		Exp e = parseAndShow(input);
+	}
 	
-
+	@Test
+	void testtablecons() throws Exception {
+		String input = "{ [a*b] = 5 , a = 6 ;}";
+		Exp e = parseAndShow(input);
+	}
+	
+	@Test
+	void abc() throws Exception{
+		String input = "abc;";
+		Exp e = parseAndShow(input);
+	}
+	
+	@Test
+	void testfunc1() throws Exception {
+		String input = "{3,a}";
+		Exp e = parseAndShow(input);
+	}
+	
+	@Test
+	void tableconst1() throws Exception {
+		String input = "{[x + y] = xx * yy,}";
+		Exp e = parseAndShow(input);
+	}
+	
+	@Test
+	void tableconstnull() throws Exception {
+		String input = "{}";
+		Exp e = parseAndShow(input);
+	}
+	@Test
+	void functe1() throws Exception {
+		String input = "function (a,b) end";
+		Exp e = parseAndShow(input);
+	}
+	@Test
+	void functe2() throws Exception {
+		String input = "function (aa, b) end >> function(test, l, ...) end & function(...) end";
+		Exp e = parseAndShow(input);
+	}
+	@Test
+	void functe3() throws Exception {
+		String input = "function (aa, b) end >>  function(test, l, ...) end";
+		Exp e = parseAndShow(input);
+	}
+	
+	
 	
 	@Test
 	void testRightAssoc() throws Exception {
@@ -145,6 +201,71 @@ class ExpressionParserTest {
 		show("expected=" + expected);
 		assertEquals(expected,e);
 	}
+	@Test
+	void testParenthesisPrecedence() throws Exception {
+		String input = "(1+2*9)+(3-4)";
+		Exp e = parseAndShow(input);
+		Exp expected = Expressions.makeBinary( Expressions.makeBinary(Expressions.makeInt(1),OP_PLUS,Expressions.makeBinary(Expressions.makeInt(2), OP_TIMES, Expressions.makeInt(9)))
+						, OP_PLUS
+				, Expressions.makeBinary(Expressions.makeInt(3),OP_MINUS,Expressions.makeInt(4)));
+		show("expected=" + expected);
+		assertEquals(expected,e);
+		
+	}
+	@Test
+	void testOpPrecedence() throws Exception {
+		String input = "\"a\"|\"b\"";
+		Exp e = parseAndShow(input);
+		Exp expected = Expressions.makeBinary(
+						Expressions.makeExpString("a")
+				, BIT_OR
+				, Expressions.makeExpString("b"));
+		show("expected=" + expected);
+		assertEquals(expected,e);
+		
+	}
+	
+	@Test
+	void testPowerPrecedence1() throws Exception {
+		String input = "1^2^3+1";
+		Exp e = parseAndShow(input);
+		Exp expected =Expressions.makeBinary(Expressions.makeBinary( Expressions.makeInt(1)
+				, OP_POW
+		, Expressions.makeBinary(Expressions.makeInt(2),OP_POW,Expressions.makeInt(3))),OP_PLUS,Expressions.makeInt(1));
+		show("expected=" + expected);
+		assertEquals(expected,e);
+		
+	}
+	
+	@Test
+	void testPowerPrecedence2() throws Exception {
+		String input = "1^2^3^4+5";
+		Exp e = parseAndShow(input);
+		Exp expected =Expressions.makeBinary(Expressions.makeBinary( Expressions.makeInt(1)
+				, OP_POW
+		, Expressions.makeBinary(Expressions.makeInt(2),OP_POW,Expressions.makeBinary(Expressions.makeInt(3), OP_POW,Expressions.makeInt(4)))),OP_PLUS,Expressions.makeInt(5));
+		show("expected=" + expected);
+		assertEquals(expected,e);
+		
+	}
+	
+	@Test
+	void testPowerPrecedence3() throws Exception {
+		String input = "1^2+1";
+		Exp e = parseAndShow(input);
+		Exp expected =Expressions.makeBinary(Expressions.makeBinary( Expressions.makeInt(1)
+				, OP_POW
+		, Expressions.makeInt(2)),OP_PLUS,Expressions.makeInt(1));
+		show("expected=" + expected);
+		assertEquals(expected,e);
+		
+	}
+	
+	//void testleftass() throws Exception{
+		//String input = "1 - 2 - 3";
+		//Exp e = parseAndShow(input);
+		//Exp expected = Expressions.makeBinary(Expressions.makeBinary(Expressions.makeInt(Expressions.makeExpString("1")), OP_MINUS, Expression.makeEx))
+	//}
 	
 	@Test
 	void testLeftAssoc() throws Exception {
